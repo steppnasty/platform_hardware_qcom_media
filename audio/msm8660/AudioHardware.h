@@ -209,7 +209,6 @@ private:
     status_t    aic3254_config(uint32_t device);
     int         aic3254_ioctl(int cmd, const int argc);
     void        aic3254_powerdown();
-    int         aic3254_set_volume(int volume);
     status_t    enableFM(int sndDevice);
     status_t    enableComboDevice(uint32_t sndDevice, bool enableOrDisable);
     status_t    disableFM();
@@ -352,6 +351,7 @@ private:
                 int         state() const { return mState; }
         virtual status_t    addAudioEffect(effect_interface_s**) { return 0;}
         virtual status_t    removeAudioEffect(effect_interface_s**) { return 0;}
+        virtual int         isForVR() const { return mForVR; }
 
     private:
                 AudioHardware* mHardware;
@@ -366,6 +366,7 @@ private:
                 uint32_t    mDevices;
                 bool        mFirstread;
                 uint32_t    mFmRec;
+                int         mForVR;
     };
 
         class AudioStreamInVoip : public AudioStreamInMSM72xx {
@@ -397,6 +398,7 @@ private:
         virtual unsigned int  getInputFramesLost() const { return 0; }
                 uint32_t    devices() { return mDevices; }
                 int         state() const { return mState; }
+        virtual int         isForVR() const { return 0; }
 
     private:
                 AudioHardware* mHardware;
