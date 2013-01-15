@@ -57,7 +57,7 @@ static inline struct qcom_audio_policy * to_qap(struct audio_policy *pol)
     return reinterpret_cast<struct qcom_audio_policy *>(pol);
 }
 
-static inline const struct qcom_audio_policy * to_cgap(const struct audio_policy *pol)
+static inline const struct qcom_audio_policy * to_cqap(const struct audio_policy *pol)
 {
     return reinterpret_cast<const struct qcom_audio_policy *>(pol);
 }
@@ -80,7 +80,7 @@ static audio_policy_dev_state_t ap_get_device_connection_state(
                                             audio_devices_t device,
                                             const char *device_address)
 {
-    const struct qcom_audio_policy *qap = to_cgap(pol);
+    const struct qcom_audio_policy *qap = to_cqap(pol);
     return (audio_policy_dev_state_t)qap->apm->getDeviceConnectionState(
                     (AudioSystem::audio_devices)device,
                     device_address);
@@ -107,7 +107,7 @@ static audio_policy_forced_cfg_t ap_get_force_use(
                                                const struct audio_policy *pol,
                                                audio_policy_force_use_t usage)
 {
-    const struct qcom_audio_policy *qap = to_cgap(pol);
+    const struct qcom_audio_policy *qap = to_cqap(pol);
     return (audio_policy_forced_cfg_t)qap->apm->getForceUse(
                           (AudioSystem::force_use)usage);
 }
@@ -123,7 +123,7 @@ static void ap_set_can_mute_enforced_audible(struct audio_policy *pol,
 
 static int ap_init_check(const struct audio_policy *pol)
 {
-    const struct qcom_audio_policy *qap = to_cgap(pol);
+    const struct qcom_audio_policy *qap = to_cqap(pol);
     return qap->apm->initCheck();
 }
 #ifdef WITH_QCOM_LPA
@@ -250,7 +250,7 @@ static int ap_get_stream_volume_index(const struct audio_policy *pol,
                                       audio_stream_type_t stream,
                                       int *index)
 {
-    const struct qcom_audio_policy *qap = to_cgap(pol);
+    const struct qcom_audio_policy *qap = to_cqap(pol);
     return qap->apm->getStreamVolumeIndex((AudioSystem::stream_type)stream,
                                           index,
                                           AUDIO_DEVICE_OUT_DEFAULT);
@@ -259,14 +259,36 @@ static int ap_get_stream_volume_index(const struct audio_policy *pol,
 static uint32_t ap_get_strategy_for_stream(const struct audio_policy *pol,
                                            audio_stream_type_t stream)
 {
-    const struct qcom_audio_policy *qap = to_cgap(pol);
+    const struct qcom_audio_policy *qap = to_cqap(pol);
     return qap->apm->getStrategyForStream((AudioSystem::stream_type)stream);
+}
+
+static int ap_set_stream_volume_index_for_device(struct audio_policy *pol,
+                                      audio_stream_type_t stream,
+                                      int index,
+                                      audio_devices_t device)
+{
+    const struct qcom_audio_policy *qap = to_cqap(pol);
+    return qap->apm->setStreamVolumeIndex((AudioSystem::stream_type)stream,
+                                           index,
+                                           device);
+}
+
+static int ap_get_stream_volume_index_for_device(const struct audio_policy *pol,
+                                      audio_stream_type_t stream,
+                                      int *index,
+                                      audio_devices_t device)
+{
+    const struct qcom_audio_policy *qap = to_cqap(pol);
+    return qap->apm->getStreamVolumeIndex((AudioSystem::stream_type)stream,
+                                           index,
+                                           AUDIO_DEVICE_OUT_DEFAULT);
 }
 
 static audio_devices_t ap_get_devices_for_stream(const struct audio_policy *pol,
                                        audio_stream_type_t stream)
 {
-    const struct qcom_audio_policy *qap = to_cgap(pol);
+    const struct qcom_audio_policy *qap = to_cqap(pol);
     return qap->apm->getDevicesForStream((AudioSystem::stream_type)stream);
 }
 
@@ -304,13 +326,13 @@ static bool ap_is_stream_active(const struct audio_policy *pol,
                                 audio_stream_type_t stream,
                                 uint32_t in_past_ms)
 {
-    const struct qcom_audio_policy *qap = to_cgap(pol);
+    const struct qcom_audio_policy *qap = to_cqap(pol);
     return qap->apm->isStreamActive(stream, in_past_ms);
 }
 
 static int ap_dump(const struct audio_policy *pol, int fd)
 {
-    const struct qcom_audio_policy *qap = to_cgap(pol);
+    const struct qcom_audio_policy *qap = to_cqap(pol);
     return qap->apm->dump(fd);
 }
 
@@ -355,6 +377,8 @@ static int create_qcom_ap(const struct audio_policy_device *device,
     qap->policy.set_stream_volume_index = ap_set_stream_volume_index;
     qap->policy.get_stream_volume_index = ap_get_stream_volume_index;
     qap->policy.get_strategy_for_stream = ap_get_strategy_for_stream;
+    qap->policy.set_stream_volume_index_for_device = ap_set_stream_volume_index_for_device;
+    qap->policy.get_stream_volume_index_for_device = ap_get_stream_volume_index_for_device;
     qap->policy.get_devices_for_stream = ap_get_devices_for_stream;
     qap->policy.get_output_for_effect = ap_get_output_for_effect;
     qap->policy.register_effect = ap_register_effect;
