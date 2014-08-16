@@ -4139,6 +4139,7 @@ OMX_ERRORTYPE omx_video::get_supported_profile_level(OMX_VIDEO_PARAM_PROFILELEVE
                     profileLevelType->eProfile,profileLevelType->eLevel);
   return eRet;
 }
+#endif
 
 #ifdef USE_ION
 int omx_video::alloc_map_ion_memory(int size,struct ion_allocation_data *alloc_data,
@@ -4150,12 +4151,8 @@ int omx_video::alloc_map_ion_memory(int size,struct ion_allocation_data *alloc_d
 		DEBUG_PRINT_ERROR("\nInvalid input to alloc_map_ion_memory");
 		return -EINVAL;
 	}
-        if(flag == CACHED) {
-             ion_dev_flags = O_RDONLY;
-        }
-        else if(flag == UNCACHED) {
-             ion_dev_flags = O_RDONLY | O_DSYNC;
-        }
+
+        ion_dev_flags = O_RDONLY;
         ion_device_fd = open (MEM_DEVICE,ion_dev_flags);
         if(ion_device_fd < 0)
         {
@@ -4164,8 +4161,13 @@ int omx_video::alloc_map_ion_memory(int size,struct ion_allocation_data *alloc_d
         }
         alloc_data->len = size;
         alloc_data->align = 4096;
+#ifdef MAX_RES_720P
+        alloc_data->len = (size + (alloc_data->align - 1)) & ~(alloc_data->align - 1);
+        alloc_data->flags = ION_HEAP(MEM_HEAP_ID);
+#else
         alloc_data->flags = (ION_HEAP(MEM_HEAP_ID) |
                               ION_HEAP(ION_IOMMU_HEAP_ID));
+#endif
         rc = ioctl(ion_device_fd,ION_IOC_ALLOC,alloc_data);
         if(rc || !alloc_data->handle) {
            DEBUG_PRINT_ERROR("\n ION ALLOC memory failed ");
@@ -4204,7 +4206,6 @@ void omx_video::free_ion_memory(struct venc_ion *buf_ion_info)
      buf_ion_info->ion_device_fd = -1;
      buf_ion_info->fd_ion_data.fd = -1;
 }
-#endif
 #endif
 #ifdef _ANDROID_ICS_
 void omx_video::omx_release_meta_buffer(OMX_BUFFERHEADERTYPE *buffer)
