@@ -50,7 +50,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <linux/ion.h>
 #endif
 #include <binder/MemoryHeapBase.h>
-#include <ui/android_native_buffer.h>
+#include <ui/ANativeObjectBase.h>
 extern "C"{
 #include<utils/Log.h>
 }
