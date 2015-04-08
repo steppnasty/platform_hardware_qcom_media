@@ -44,6 +44,7 @@ include $(CLEAR_VARS)
 libmm-venc-inc      := $(LOCAL_PATH)/inc
 libmm-venc-inc      += $(OMX_VIDEO_PATH)/vidc/common/inc
 libmm-venc-inc      += hardware/qcom/media/mm-core/inc
+libmm-venc-inc      += frameworks/native/include/media/hardware
 libmm-venc-inc      += $(TARGET_OUT_HEADERS)/mm-core/omxcore
 libmm-venc-inc      += $(TOP)/hardware/qcom/media/libstagefrighthw
 libmm-venc-inc      += $(TOP)/hardware/qcom/display/libgralloc

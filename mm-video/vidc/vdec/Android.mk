@@ -57,6 +57,7 @@ libmm-vdec-inc          += hardware/qcom/media/mm-core/inc
 libmm-vdec-inc          += $(TARGET_OUT_HEADERS)/mm-core/omxcore
 #DRM include - Interface which loads the DRM library
 libmm-vdec-inc	        += $(OMX_VIDEO_PATH)/DivxDrmDecrypt/inc
+libmm-vdec-inc          += frameworks/native/include/media/hardware
 
 libmm-vdec-inc          += $(TOP)/hardware/qcom/display/libgralloc \
                         += $(TOP)/hardware/qcom/display/libgenlock
