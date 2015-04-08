@@ -47,7 +47,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #ifdef _ANDROID_
 #ifdef USE_ION
-#include <linux/ion.h>
+#include <linux/msm_ion.h>
 #endif
 #include <binder/MemoryHeapBase.h>
 #include <ui/ANativeObjectBase.h>
