@@ -72,7 +72,9 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #if defined (_ANDROID_ICS_)
 #include <genlock.h>
+#if !defined (_MSM7X30_)
 #include <qdMetaData.h>
+#endif
 #endif
 
 #ifdef _ANDROID_
@@ -160,6 +162,8 @@ char ouputextradatafilename [] = "/data/extradata";
 
 #define Log2(number, power)  { OMX_U32 temp = number; power = 0; while( (0 == (temp & 0x1)) &&  power < 16) { temp >>=0x1; power++; } }
 #define Q16ToFraction(q,num,den) { OMX_U32 power; Log2(q,power);  num = q >> power; den = 0x1 << (16 - power); }
+
+int debug_level = PRIO_ERROR;
 
 void* async_message_thread (void *input)
 {
@@ -513,6 +517,10 @@ omx_vdec::omx_vdec(): m_state(OMX_StateInvalid),
   DEBUG_PRINT_HIGH("In OMX vdec Constructor");
 #ifdef _ANDROID_
   char property_value[PROPERTY_VALUE_MAX] = {0};
+  property_get("vidc.debug.level", property_value, "0");
+  debug_level = atoi(property_value);
+  property_value[0] = '\0';
+
   property_get("vidc.dec.debug.perf", property_value, "0");
   perf_flag = atoi(property_value);
   if (perf_flag)
@@ -4193,7 +4201,7 @@ OMX_ERRORTYPE  omx_vdec::use_output_buffer(
         drv_ctx.ptr_outputbuffer[i].bufferaddr = buff;
         drv_ctx.ptr_outputbuffer[i].mmaped_size =
             drv_ctx.ptr_outputbuffer[i].buffer_len = drv_ctx.op_buf.buffer_size;
-#if defined(_ANDROID_ICS_)
+#if defined(_ANDROID_ICS_) && !defined(_MSM7X30_)
         if (drv_ctx.interlace != VDEC_InterlaceFrameProgressive) {
             int enable = 1;
             setMetaData(handle, PP_PARAM_INTERLACED, (void*)&enable);
@@ -8920,7 +8928,7 @@ void omx_vdec::append_interlace_extradata(OMX_OTHER_EXTRADATATYPE *extra,
     interlace_format->bInterlaceFormat = OMX_FALSE;
     interlace_format->nInterlaceFormats = OMX_InterlaceFrameProgressive;
     drv_ctx.interlace = VDEC_InterlaceFrameProgressive;
-#if defined(_ANDROID_ICS_)
+#if defined(_ANDROID_ICS_) && !defined(_MSM7X30_)
     if(handle)
     {
       setMetaData(handle, PP_PARAM_INTERLACED, (void*)&enable);
@@ -8932,7 +8940,7 @@ void omx_vdec::append_interlace_extradata(OMX_OTHER_EXTRADATATYPE *extra,
     interlace_format->bInterlaceFormat = OMX_TRUE;
     interlace_format->nInterlaceFormats = OMX_InterlaceInterleaveFrameTopFieldFirst;
     drv_ctx.interlace = VDEC_InterlaceInterleaveFrameTopFieldFirst;
-#if defined(_ANDROID_ICS_)
+#if defined(_ANDROID_ICS_) && !defined(_MSM7X30_)
     enable = 1;
     if(handle)
     {
@@ -9789,7 +9797,8 @@ OMX_BUFFERHEADERTYPE* omx_vdec::allocate_color_convert_buf::get_il_buf_hdr
     bool status;
     if (!omx->in_reconfig && !omx->output_flush_progress) {
       status = c2d.convert(omx->drv_ctx.ptr_outputbuffer[index].pmem_fd,
-                  bufadd->pBuffer,pmem_fd[index],pmem_baseaddress[index]);
+                  omx->m_out_mem_ptr->pBuffer, bufadd->pBuffer, pmem_fd[index],
+                  pmem_baseaddress[index], pmem_baseaddress[index]);
       m_out_mem_ptr_client[index].nFilledLen = buffer_size_req;
       if (!status){
         DEBUG_PRINT_ERROR("\n Failed color conversion %d", status);

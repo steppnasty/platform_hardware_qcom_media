@@ -159,7 +159,7 @@ venc_dev::~venc_dev()
   DEBUG_PRINT_LOW("venc_dev distructor");
 }
 
-void* async_venc_message_thread (void *input)
+void* venc_dev::async_venc_message_thread (void *input)
 {
   struct venc_ioctl_msg ioctl_msg ={NULL,NULL};
   struct venc_timeout timeout;

@@ -40,14 +40,13 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define TIMEOUT 5000
 #define MAX_RECON_BUFFERS 4
 
-void* async_venc_message_thread (void *);
-
 class venc_dev
 {
 public:
   venc_dev(class omx_venc *venc_class); //constructor
   ~venc_dev(); //des
 
+  static void* async_venc_message_thread (void *);
   bool venc_open(OMX_U32);
   void venc_close();
   unsigned venc_stop(void);
@@ -78,6 +77,7 @@ public:
   bool venc_loaded_stop(void);
   bool venc_loaded_start_done(void);
   bool venc_loaded_stop_done(void);
+  bool venc_color_align(OMX_BUFFERHEADERTYPE *buffer, OMX_U32 width, OMX_U32 height);
   bool venc_get_capability_ltrcount(OMX_U32 *, OMX_U32 *, OMX_U32 *);
   OMX_U32 m_nDriver_fd;
   bool m_profile_set;
@@ -152,7 +152,6 @@ private:
   bool venc_set_ltrcount(OMX_U32 count);
   bool venc_set_ltrperiod(OMX_U32 period);
   bool venc_set_ltruse(OMX_U32 id, OMX_U32 frames);
-  bool venc_color_align(OMX_BUFFERHEADERTYPE *buffer, OMX_U32 width, OMX_U32 height);
 #ifdef MAX_RES_1080P
   OMX_U32 pmem_free();
   OMX_U32 pmem_allocate(OMX_U32 size, OMX_U32 alignment, OMX_U32 count);

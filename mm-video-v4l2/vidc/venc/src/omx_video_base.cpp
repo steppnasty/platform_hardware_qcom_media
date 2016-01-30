@@ -3630,8 +3630,10 @@ OMX_ERRORTYPE  omx_video::empty_this_buffer_proxy(OMX_IN OMX_HANDLETYPE         
     memcpy (pmem_data_buf, (buffer->pBuffer + buffer->nOffset),
             buffer->nFilledLen);
     DEBUG_PRINT_LOW("memcpy() done in ETBProxy for i/p Heap UseBuf");
+#ifdef _MSM8974_
   } else if (mUseProxyColorFormat) {
     fd = m_pInput_pmem[nBufIndex].fd;
+#endif
   } else if (m_sInPortDef.format.video.eColorFormat ==
       OMX_COLOR_FormatYUV420SemiPlanar) {
       //For the case where YUV420SP buffers are qeueued to component

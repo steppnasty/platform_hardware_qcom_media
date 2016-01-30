@@ -953,7 +953,7 @@ private:
         };
         struct vidc_heap m_heap_ptr[MAX_COUNT];
     };
-#if  defined (_MSM8960_) || defined (_MSM8974_)
+#if  defined (_MSM8960_) || defined (_MSM8974_) || defined (_MSM7X30_)
     allocate_color_convert_buf client_buffers;
 #endif
     struct video_decoder_capability m_decoder_capability;

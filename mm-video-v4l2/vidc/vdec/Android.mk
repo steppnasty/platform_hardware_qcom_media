@@ -44,8 +44,9 @@ endif
 ifeq ($(TARGET_BOARD_PLATFORM),msm7627a)
 libOmxVdec-def += -DMAX_RES_720P
 endif
-ifeq ($(TARGET_BOARD_PLATFORM),msm7630_surf)
+ifeq ($(TARGET_BOARD_PLATFORM),msm7x30)
 libOmxVdec-def += -DMAX_RES_720P
+libOmxVdec-def += -D_MSM7X30_
 endif
 ifeq ($(TARGET_BOARD_PLATFORM),msm8610)
 libOmxVdec-def += -DMAX_RES_1080P
@@ -113,7 +114,9 @@ LOCAL_SHARED_LIBRARIES  := liblog libutils libbinder libcutils libdl
 
 LOCAL_SHARED_LIBRARIES += libgenlock
 LOCAL_SHARED_LIBRARIES  += libdivxdrmdecrypt
+ifneq ($(TARGET_BOARD_PLATFORM),msm7x30)
 LOCAL_SHARED_LIBRARIES  += libqdMetaData
+endif
 
 LOCAL_SRC_FILES         := src/frameparser.cpp
 LOCAL_SRC_FILES         += src/h264_utils.cpp
