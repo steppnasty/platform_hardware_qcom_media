@@ -72,9 +72,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #if defined (_ANDROID_ICS_)
 #include <genlock.h>
-#if !defined (_MSM7X30_)
 #include <qdMetaData.h>
-#endif
 #endif
 
 #ifdef _ANDROID_
@@ -2963,7 +2961,7 @@ OMX_ERRORTYPE  omx_vdec::get_parameter(OMX_IN OMX_HANDLETYPE     hComp,
             if(nativeBuffersUsage->nPortIndex == OMX_CORE_OUTPUT_PORT_INDEX) {
 #ifdef USE_ION
 #if defined (MAX_RES_720P)
-                nativeBuffersUsage->nUsage = (GRALLOC_USAGE_PRIVATE_CAMERA_HEAP | GRALLOC_USAGE_PRIVATE_UNCACHED);
+                nativeBuffersUsage->nUsage = (GRALLOC_USAGE_PRIVATE_ADSP_HEAP | GRALLOC_USAGE_PRIVATE_UNCACHED);
                 DEBUG_PRINT_HIGH("ION:720P: nUsage 0x%x",nativeBuffersUsage->nUsage);
 #else
                 if(secure_mode) {
@@ -2978,7 +2976,7 @@ OMX_ERRORTYPE  omx_vdec::get_parameter(OMX_IN OMX_HANDLETYPE     hComp,
 #endif //(MAX_RES_720P)
 #else // USE_ION
 #if defined (MAX_RES_720P) ||  defined (MAX_RES_1080P_EBI)
-                nativeBuffersUsage->nUsage = (GRALLOC_USAGE_PRIVATE_ADSP_HEAP | GRALLOC_USAGE_PRIVATE_UNCACHED);
+                nativeBuffersUsage->nUsage = (GRALLOC_USAGE_PRIVATE_CAMERA_HEAP | GRALLOC_USAGE_PRIVATE_UNCACHED);
                 DEBUG_PRINT_HIGH("720P/1080P_EBI: nUsage 0x%x",nativeBuffersUsage->nUsage);
 #elif MAX_RES_1080P
                 nativeBuffersUsage->nUsage = (GRALLOC_USAGE_PRIVATE_SMI_HEAP | GRALLOC_USAGE_PRIVATE_UNCACHED);
@@ -4201,7 +4199,7 @@ OMX_ERRORTYPE  omx_vdec::use_output_buffer(
         drv_ctx.ptr_outputbuffer[i].bufferaddr = buff;
         drv_ctx.ptr_outputbuffer[i].mmaped_size =
             drv_ctx.ptr_outputbuffer[i].buffer_len = drv_ctx.op_buf.buffer_size;
-#if defined(_ANDROID_ICS_) && !defined(_MSM7X30_)
+#if defined(_ANDROID_ICS_)
         if (drv_ctx.interlace != VDEC_InterlaceFrameProgressive) {
             int enable = 1;
             setMetaData(handle, PP_PARAM_INTERLACED, (void*)&enable);
@@ -8928,7 +8926,7 @@ void omx_vdec::append_interlace_extradata(OMX_OTHER_EXTRADATATYPE *extra,
     interlace_format->bInterlaceFormat = OMX_FALSE;
     interlace_format->nInterlaceFormats = OMX_InterlaceFrameProgressive;
     drv_ctx.interlace = VDEC_InterlaceFrameProgressive;
-#if defined(_ANDROID_ICS_) && !defined(_MSM7X30_)
+#if defined(_ANDROID_ICS_)
     if(handle)
     {
       setMetaData(handle, PP_PARAM_INTERLACED, (void*)&enable);
@@ -8940,7 +8938,7 @@ void omx_vdec::append_interlace_extradata(OMX_OTHER_EXTRADATATYPE *extra,
     interlace_format->bInterlaceFormat = OMX_TRUE;
     interlace_format->nInterlaceFormats = OMX_InterlaceInterleaveFrameTopFieldFirst;
     drv_ctx.interlace = VDEC_InterlaceInterleaveFrameTopFieldFirst;
-#if defined(_ANDROID_ICS_) && !defined(_MSM7X30_)
+#if defined(_ANDROID_ICS_)
     enable = 1;
     if(handle)
     {

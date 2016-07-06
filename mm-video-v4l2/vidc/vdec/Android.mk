@@ -114,9 +114,7 @@ LOCAL_SHARED_LIBRARIES  := liblog libutils libbinder libcutils libdl
 
 LOCAL_SHARED_LIBRARIES += libgenlock
 LOCAL_SHARED_LIBRARIES  += libdivxdrmdecrypt
-ifneq ($(TARGET_BOARD_PLATFORM),msm7x30)
 LOCAL_SHARED_LIBRARIES  += libqdMetaData
-endif
 
 LOCAL_SRC_FILES         := src/frameparser.cpp
 LOCAL_SRC_FILES         += src/h264_utils.cpp
