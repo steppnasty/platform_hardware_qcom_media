@@ -3637,6 +3637,7 @@ OMX_ERRORTYPE  omx_vdec::set_parameter(OMX_IN OMX_HANDLETYPE     hComp,
       break;
 
     case OMX_QcomIndexParamEnableSmoothStreaming:
+#ifdef MAX_RES_1080P
       {
 
         int rc = ioctl(drv_ctx.video_driver_fd,
@@ -3646,6 +3647,7 @@ OMX_ERRORTYPE  omx_vdec::set_parameter(OMX_IN OMX_HANDLETYPE     hComp,
             eRet = OMX_ErrorHardware;
         }
       }
+#endif
      break;
 #endif
 #if defined (_ANDROID_HONEYCOMB_) || defined (_ANDROID_ICS_)
