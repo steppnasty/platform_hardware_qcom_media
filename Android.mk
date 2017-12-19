@@ -8,11 +8,11 @@ ifneq ($(filter msm8610 msm8226 msm8974 msm8960 msm8660 msm7x30 apq8084,$(TARGET
 include $(QCOM_MEDIA_ROOT)/mm-video-v4l2/Android.mk
 endif
 
-ifneq ($(filter msm8610 msm8226 msm8974 msm8960 msm7x30 apq8084,$(TARGET_BOARD_PLATFORM)),)
+ifneq ($(filter msm8610 msm8226 msm8974 msm8960 msm8660 msm7x30 apq8084,$(TARGET_BOARD_PLATFORM)),)
 include $(QCOM_MEDIA_ROOT)/libc2dcolorconvert/Android.mk
 endif
 
-ifneq ($(filter msm8974 msm8960 msm8226 msm7x30 apq8084,$(TARGET_BOARD_PLATFORM)),)
+ifneq ($(filter msm8974 msm8960 msm8226 msm8660 msm7x30 apq8084,$(TARGET_BOARD_PLATFORM)),)
 include $(QCOM_MEDIA_ROOT)/QCMediaPlayer/Android.mk
 include $(QCOM_MEDIA_ROOT)/dashplayer/Android.mk
 endif

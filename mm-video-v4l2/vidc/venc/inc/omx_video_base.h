@@ -42,7 +42,11 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //                             Include Files
 //////////////////////////////////////////////////////////////////////////////
 
+#ifdef MAX_RES_1080P
+#define LOG_TAG "OMX-VENC-1080p"
+#else
 #define LOG_TAG "OMX-VENC-720p"
+#endif
 #include <stdlib.h>
 #include <stdio.h>
 #include <sys/mman.h>
